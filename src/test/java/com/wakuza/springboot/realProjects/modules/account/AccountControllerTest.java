@@ -27,13 +27,58 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 public class AccountControllerTest {
 
-    @Autowired private MockMvc mockMvc;
+    @Autowired
+    private MockMvc mockMvc;
 
     @Autowired
     private AccountRepository accountRepository;
 
     @MockBean
     JavaMailSender javaMailSender;
+
+    @DisplayName("회원 가입 화면 보이는지 테스트")
+    @Test
+    void signUpForm() throws Exception{
+        mockMvc.perform(get("/sign-up"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("account/sign-up"))
+                .andExpect(model().attributeExists("signUpForm"))
+                .andExpect(unauthenticated());
+    }
+
+    @DisplayName("회원 가입 처리 - 입력값 오류")
+    @Test
+    void signUpForm_with_wrong_input() throws Exception {
+        mockMvc.perform(post("/sign-up")
+                .param("nickname","wakuza")
+                .param("email","email...")
+                .param("password","12345")
+                .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(view().name("account/sign-up"))
+                .andExpect(unauthenticated());
+    }
+
+    @DisplayName("회원 가입 처리 - 입력값 정상")
+    @Test
+    void signUpForm_with_correct_input() throws Exception {
+        mockMvc.perform(post("/sign-up")
+                .param("nickname","wakuza")
+                .param("email","gaeomna@naver.com")
+                .param("password","12345678")
+                .with(csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/"))
+                .andExpect(authenticated().withUsername("wakuza"));
+
+        Account account = accountRepository.findByEmail("gaeomna@naver.com");
+        assertNotNull(account);
+        assertNotEquals(account.getPassword(),"12345678");
+        assertNotNull(account.getEmailCheckToken());
+//        assertTrue(accountRepository.existsByEmail("gaeomna@naver.com"));
+        then(javaMailSender).should().send(any(SimpleMailMessage.class));
+
+    }
 
     @DisplayName("인증 메일 확인 - 오류")
     @Test
@@ -68,50 +113,4 @@ public class AccountControllerTest {
                 .andExpect(view().name("account/checked-email"))
                 .andExpect(authenticated().withUsername("wakuza"));
     }
-
-
-
-    @DisplayName("회원 가입 화면 보이는지 테스트")
-    @Test
-    void signUpForm() throws Exception{
-        mockMvc.perform(get("/sign-up"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("account/sign-up"))
-                .andExpect(model().attributeExists("signUpForm"))
-                .andExpect(unauthenticated());
-    }
-
-    @DisplayName("회원 가입 처리 - 입력값 오류")
-    @Test
-    void signUpForm_with_wrong_input() throws Exception {
-        mockMvc.perform(post("/sign-up")
-                .param("nickname","wakuza")
-                .param("email","email...")
-                .param("password","12345"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("account/sign-up"))
-                .andExpect(unauthenticated());
-    }
-
-    @DisplayName("회원 가입 처리 - 입력값 정상")
-    @Test
-    void signUpForm_with_correct_input() throws Exception {
-        mockMvc.perform(post("/sign-up")
-                .param("nickname","wakuza")
-                .param("email","gaeomna@naver.com")
-                .param("password","12345678")
-                .with(csrf()))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/"))
-                .andExpect(authenticated().withUsername("wakuza"));
-
-        Account account = accountRepository.findByEmail("gaeomna@naver.com");
-        assertNotNull(account);
-        assertNotEquals(account.getPassword(),"12345678");
-        assertNotNull(account.getEmailCheckToken());
-//        assertTrue(accountRepository.existsByEmail("gaeomna@naver.com"));
-        then(javaMailSender).should().send(any(SimpleMailMessage.class));
-
-    }
-
 }
