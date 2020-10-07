@@ -21,6 +21,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class AccountService  implements UserDetailsService {
 
@@ -30,7 +31,6 @@ public class AccountService  implements UserDetailsService {
 //    private final AuthenticationManager authenticationManager;
 
 
-    @Transactional
     public Account processNewAccount(SignUpForm signUpForm) {
         Account newAccount = saveNewAccount(signUpForm);
         newAccount.generateEmailCheckToken();
@@ -72,6 +72,7 @@ public class AccountService  implements UserDetailsService {
 //        context.setAuthentication(token); 이게 정석 코드
     }
 
+    @Transactional(readOnly = true)
     @Override
     public UserDetails loadUserByUsername(String emailOrNickname) throws UsernameNotFoundException {
         Account account = accountRepository.findByEmail(emailOrNickname);
@@ -82,5 +83,10 @@ public class AccountService  implements UserDetailsService {
             throw new UsernameNotFoundException(emailOrNickname);
         }
         return new UserAccount(account);
+    }
+
+    public void completeSignUp(Account account) {
+        account.completeSignUp();
+        login(account);
     }
 }
