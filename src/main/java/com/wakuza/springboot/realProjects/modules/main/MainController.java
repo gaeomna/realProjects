@@ -23,4 +23,7 @@ public class MainController {
     public String login() {
         return "login";
     }
+
+    @GetMapping("/gaeomna")
+    public String gaeomna(){return "gaeomna";}
 }
