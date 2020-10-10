@@ -4,7 +4,6 @@ import com.wakuza.springboot.realProjects.modules.account.Account;
 import com.wakuza.springboot.realProjects.modules.account.AccountService;
 import com.wakuza.springboot.realProjects.modules.account.CurrentUser;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.procedure.spi.ParameterRegistrationImplementor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -13,8 +12,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import javax.validation.Valid;
-import java.nio.channels.AcceptPendingException;
 
 @Controller
 @RequiredArgsConstructor
@@ -33,7 +32,7 @@ public class SettingsController {
 
 
     @GetMapping(SETTINGS_PROFILE_URL)
-    public String profileUpdateForm(@CurrentUser Account account, Model model){
+    public String updateProfileForm(@CurrentUser Account account, Model model){
         model.addAttribute(account);
         model.addAttribute(new Profile(account));
 
@@ -54,8 +53,8 @@ public class SettingsController {
     }
 
     @GetMapping(SETTINGS_PASSWORD_URL)
-    public String profilePasswordForm(@CurrentUser Account account, Model model){
-        model.addAttribute("account");
+    public String updatePasswordForm(@CurrentUser Account account, Model model){
+        model.addAttribute(account);
         model.addAttribute(new PasswordForm());
         return SETTINGS_PASSWORD_NAME;
     }
@@ -70,7 +69,7 @@ public class SettingsController {
         
         accountService.updatePassword(account, passwordForm.getNewPassword());
         attributes.addFlashAttribute("message","패스워드를 수정했습니다.");
-        return "redirect:" + SETTINGS_PASSWORD_NAME;
+        return "redirect:" + SETTINGS_PASSWORD_URL;
     }
 
 

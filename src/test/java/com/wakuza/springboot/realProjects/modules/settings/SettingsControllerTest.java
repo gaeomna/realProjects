@@ -38,11 +38,11 @@ class SettingsControllerTest {
     @Test
     void updateProfile() throws Exception{
         String bio = "짧은 소개를 수정하는 경우";
-        mockMvc.perform(post(SettingsController.SETTINGS_PROFILE_VIEW_URL)
+        mockMvc.perform(post(SettingsController.SETTINGS_PROFILE_URL)
                 .param("bio",bio)
                 .with(csrf()))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(SettingsController.SETTINGS_PROFILE_VIEW_URL))
+                .andExpect(redirectedUrl(SettingsController.SETTINGS_PROFILE_URL))
                 .andExpect(flash().attributeExists("message"));
 
         Account gaeomna = accountRepository.findByNickname("gaeomna");
@@ -55,11 +55,11 @@ class SettingsControllerTest {
     @Test
     void updateProfile_error() throws Exception{
         String bio = "길게 소개를 수정하는 경우, 길게 소개를 수정하는 경우, 길게 소개를 수정하는 경우, 길게 소개를 수정하는 경우";
-        mockMvc.perform(post(SettingsController.SETTINGS_PROFILE_VIEW_URL)
+        mockMvc.perform(post(SettingsController.SETTINGS_PROFILE_URL)
                 .param("bio",bio)
                 .with(csrf()))
                 .andExpect(status().isOk())
-                .andExpect(view().name(SettingsController.SETTINGS_PROFILE_VIEW_NAME))
+                .andExpect(view().name(SettingsController.SETTINGS_PROFILE_NAME))
                 .andExpect(model().attributeExists("account"))
                 .andExpect(model().attributeExists("profile"))
                 .andExpect(model().hasErrors());
@@ -72,7 +72,7 @@ class SettingsControllerTest {
     @DisplayName("프로필 수정 폼")
     @Test
     void updateProfileForm() throws Exception{
-        mockMvc.perform(get(SettingsController.SETTINGS_PROFILE_VIEW_URL))
+        mockMvc.perform(get(SettingsController.SETTINGS_PROFILE_URL))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("account"))
                 .andExpect(model().attributeExists("profile"));

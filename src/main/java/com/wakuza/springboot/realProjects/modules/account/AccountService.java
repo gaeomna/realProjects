@@ -101,9 +101,9 @@ public class AccountService  implements UserDetailsService {
         accountRepository.save(account);
     }
 
-    public void updatePassword(Account account, PasswordForm passwordForm){
-        accountRepository.updatePassword(account.getPassword(),passwordForm.getNewPassword());
-
+    public void updatePassword(Account account, String newPassword){
+        account.setPassword(passwordEncoder.encode(newPassword));
+        accountRepository.save(account); //Merge
     }
 
 
