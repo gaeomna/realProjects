@@ -1,6 +1,5 @@
 package com.wakuza.springboot.realProjects.modules.account;
 
-
 import com.wakuza.springboot.realProjects.infra.mail.ConsoleMailSender;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
