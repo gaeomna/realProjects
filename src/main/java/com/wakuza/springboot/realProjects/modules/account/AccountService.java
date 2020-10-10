@@ -1,5 +1,6 @@
 package com.wakuza.springboot.realProjects.modules.account;
 
+import com.wakuza.springboot.realProjects.modules.settings.PasswordForm;
 import com.wakuza.springboot.realProjects.modules.settings.Profile;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
@@ -99,4 +100,11 @@ public class AccountService  implements UserDetailsService {
         account.setProfileImage(profile.getProfileImage());
         accountRepository.save(account);
     }
+
+    public void updatePassword(Account account, PasswordForm passwordForm){
+        accountRepository.updatePassword(account.getPassword(),passwordForm.getNewPassword());
+
+    }
+
+
 }
