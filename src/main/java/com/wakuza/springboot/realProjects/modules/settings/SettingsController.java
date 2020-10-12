@@ -4,7 +4,6 @@ import com.wakuza.springboot.realProjects.modules.account.Account;
 import com.wakuza.springboot.realProjects.modules.account.AccountService;
 import com.wakuza.springboot.realProjects.modules.account.CurrentUser;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.procedure.spi.ParameterRegistrationImplementor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -15,22 +14,26 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
-import java.nio.channels.AcceptPendingException;
 
 @Controller
 @RequiredArgsConstructor
 public class SettingsController {
 
+    static final String SETTINGS_PROFILE_VIEW_NAME = "settings/profile";
+    static final String SETTINGS_PROFILE_URL = "/settings/profile";
+    static final String SETTINGS_PASSWORD_VIEW_NAME = "settings/password";
+    static final String SETTINGS_PASSWORD_URL = "/settings/password";
+    static final String SETTINGS_NOTIFICATION_VIEW_NAME = "settings/notifications";
+    static final String SETTINGS_NOTIFICATION_URL = "/settings/notifications";
+
+    private final AccountService accountService;
+
+
+
     @InitBinder("passwordForm")
     public void initBinder(WebDataBinder webDateBinder) {
         webDateBinder.addValidators(new PasswordFormValidator());
     }
-
-    static final String SETTINGS_PROFILE_NAME = "settings/profile";
-    static final String SETTINGS_PROFILE_URL = "/settings/profile";
-    static final String SETTINGS_PASSWORD_NAME = "settings/password";
-    static final String SETTINGS_PASSWORD_URL = "/settings/password";
-    private final AccountService accountService;
 
 
     @GetMapping(SETTINGS_PROFILE_URL)
@@ -38,15 +41,15 @@ public class SettingsController {
         model.addAttribute(account);
         model.addAttribute(new Profile(account));
 
-        return SETTINGS_PROFILE_NAME;
+        return SETTINGS_PROFILE_VIEW_NAME;
     }
-
+    
     @PostMapping(SETTINGS_PROFILE_URL)
     public String updateProfile(@CurrentUser Account account, @Valid Profile profile,
                                 Errors errors, Model model, RedirectAttributes attributes) {
         if (errors.hasErrors()) {
             model.addAttribute(account);
-            return SETTINGS_PROFILE_NAME;
+            return SETTINGS_PROFILE_VIEW_NAME;
         }
 
         accountService.updateProfile(account, profile);
@@ -58,7 +61,7 @@ public class SettingsController {
     public String profilePasswordForm(@CurrentUser Account account, Model model) {
         model.addAttribute("account");
         model.addAttribute(new PasswordForm());
-        return SETTINGS_PASSWORD_NAME;
+        return SETTINGS_PASSWORD_VIEW_NAME;
     }
 
     @PostMapping(SETTINGS_PASSWORD_URL)
@@ -66,13 +69,37 @@ public class SettingsController {
                                  Errors errors, Model model, RedirectAttributes attributes) {
         if (errors.hasErrors()) {
             model.addAttribute(account);
-            return SETTINGS_PASSWORD_NAME;
+            return SETTINGS_PASSWORD_VIEW_NAME;
         }
 
         accountService.updatePassword(account, passwordForm.getNewPassword());
         attributes.addFlashAttribute("message", "패스워드를 수정했습니다.");
         return "redirect:" + SETTINGS_PASSWORD_URL;
     }
+
+    @GetMapping(SETTINGS_NOTIFICATION_URL)
+    public String updateNotificationForm(@CurrentUser Account account, Model model){
+        model.addAttribute("account");
+        model.addAttribute(new Notifications());
+        return SETTINGS_NOTIFICATION_VIEW_NAME;
+    }
+
+    @PostMapping(SETTINGS_NOTIFICATION_URL)
+    public String updateNotifications(@CurrentUser Account account,@Valid Notifications notifications,
+                                      Model model,Errors errors,RedirectAttributes attributes){
+        if(errors.hasErrors()){
+            model.addAttribute(account);
+            return SETTINGS_NOTIFICATION_VIEW_NAME;
+        }
+
+        accountService.updateNotifications(account,notifications);
+        attributes.addFlashAttribute("message","알림 설정 했습니다.");
+        return SETTINGS_NOTIFICATION_URL;
+
+
+    }
+
+
 
 
 }

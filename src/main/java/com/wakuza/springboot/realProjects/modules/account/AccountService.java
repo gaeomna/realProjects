@@ -1,5 +1,6 @@
 package com.wakuza.springboot.realProjects.modules.account;
 
+import com.wakuza.springboot.realProjects.modules.settings.Notifications;
 import com.wakuza.springboot.realProjects.modules.settings.PasswordForm;
 import com.wakuza.springboot.realProjects.modules.settings.Profile;
 import lombok.RequiredArgsConstructor;
@@ -107,5 +108,13 @@ public class AccountService  implements UserDetailsService {
 
     }
 
-
+    public void updateNotifications(Account account, Notifications notifications) {
+        account.setStudyCreatedByEmail(notifications.isStudyCreatedByEmail());
+        account.setStudyCreatedByWeb(notifications.isStudyCreatedByWeb());
+        account.setStudyEnrollmentResultByEmail(notifications.isStudyEnrollmentResultByEmail());
+        account.setStudyEnrollmentResultByWeb(notifications.isStudyEnrollmentResultByWeb());
+        account.setStudyUpdatedByEmail(notifications.isStudyUpdatedByEmail());
+        account.setStudyUpdatedByWeb(notifications.isStudyUpdatedByWeb());
+        accountRepository.save(account);
+    }
 }
