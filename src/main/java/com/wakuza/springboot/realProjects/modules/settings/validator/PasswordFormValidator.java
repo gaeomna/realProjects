@@ -1,5 +1,6 @@
-package com.wakuza.springboot.realProjects.modules.settings;
+package com.wakuza.springboot.realProjects.modules.settings.validator;
 
+import com.wakuza.springboot.realProjects.modules.settings.form.PasswordForm;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 

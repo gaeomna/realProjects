@@ -1,4 +1,4 @@
-package com.wakuza.springboot.realProjects.modules.settings;
+package com.wakuza.springboot.realProjects.modules.settings.form;
 
 
 import lombok.Data;

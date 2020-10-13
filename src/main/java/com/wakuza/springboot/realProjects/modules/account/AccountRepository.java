@@ -1,6 +1,5 @@
 package com.wakuza.springboot.realProjects.modules.account;
 
-import com.wakuza.springboot.realProjects.modules.settings.PasswordForm;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.transaction.annotation.Transactional;
 

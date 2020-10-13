@@ -3,7 +3,14 @@ package com.wakuza.springboot.realProjects.modules.settings;
 import com.wakuza.springboot.realProjects.modules.account.Account;
 import com.wakuza.springboot.realProjects.modules.account.AccountService;
 import com.wakuza.springboot.realProjects.modules.account.CurrentUser;
+import com.wakuza.springboot.realProjects.modules.settings.form.NicknameForm;
+import com.wakuza.springboot.realProjects.modules.settings.form.Notifications;
+import com.wakuza.springboot.realProjects.modules.settings.form.PasswordForm;
+import com.wakuza.springboot.realProjects.modules.settings.form.Profile;
+import com.wakuza.springboot.realProjects.modules.settings.validator.NicknameFormValidator;
+import com.wakuza.springboot.realProjects.modules.settings.validator.PasswordFormValidator;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -25,21 +32,29 @@ public class SettingsController {
     static final String SETTINGS_PASSWORD_URL = "/settings/password";
     static final String SETTINGS_NOTIFICATION_VIEW_NAME = "settings/notifications";
     static final String SETTINGS_NOTIFICATION_URL = "/settings/notifications";
+    static final String SETTINGS_ACCOUNT_VIEW_NAME = "settings/account";
+    static final String SETTINGS_ACCOUNT_URL= "/settings/account";
 
     private final AccountService accountService;
-
+    private final ModelMapper modelMapper;
+    private final NicknameFormValidator nicknameFormValidator;
 
 
     @InitBinder("passwordForm")
-    public void initBinder(WebDataBinder webDateBinder) {
+    public void passwordFormInitBinder(WebDataBinder webDateBinder) {
         webDateBinder.addValidators(new PasswordFormValidator());
+    }
+
+    @InitBinder("nicknameForm")
+    public void nicknameFormInitBinder(WebDataBinder webDateBinder) {
+        webDateBinder.addValidators(nicknameFormValidator);
     }
 
 
     @GetMapping(SETTINGS_PROFILE_URL)
     public String profileUpdateForm(@CurrentUser Account account, Model model) {
         model.addAttribute(account);
-        model.addAttribute(new Profile(account));
+        model.addAttribute(modelMapper.map(account, Profile.class));
 
         return SETTINGS_PROFILE_VIEW_NAME;
     }
@@ -59,8 +74,8 @@ public class SettingsController {
 
     @GetMapping(SETTINGS_PASSWORD_URL)
     public String profilePasswordForm(@CurrentUser Account account, Model model) {
-        model.addAttribute("account");
-        model.addAttribute(new PasswordForm());
+        model.addAttribute(account);
+        model.addAttribute(modelMapper.map(account,PasswordForm.class));
         return SETTINGS_PASSWORD_VIEW_NAME;
     }
 
@@ -79,8 +94,8 @@ public class SettingsController {
 
     @GetMapping(SETTINGS_NOTIFICATION_URL)
     public String updateNotificationForm(@CurrentUser Account account, Model model){
-        model.addAttribute("account");
-        model.addAttribute(new Notifications());
+        model.addAttribute(account);
+        model.addAttribute(modelMapper.map(account, Notifications.class));
         return SETTINGS_NOTIFICATION_VIEW_NAME;
     }
 
@@ -89,14 +104,31 @@ public class SettingsController {
                                       Model model,Errors errors,RedirectAttributes attributes){
         if(errors.hasErrors()){
             model.addAttribute(account);
-            return SETTINGS_NOTIFICATION_VIEW_NAME;
+            return "redirect:" + SETTINGS_NOTIFICATION_VIEW_NAME;
         }
-
         accountService.updateNotifications(account,notifications);
         attributes.addFlashAttribute("message","알림 설정 했습니다.");
         return SETTINGS_NOTIFICATION_URL;
+    }
 
+    @GetMapping(SETTINGS_ACCOUNT_URL)
+    public String updateAccountForm(@CurrentUser Account account, Model model){
+        model.addAttribute(account);
+        model.addAttribute(modelMapper.map(account,NicknameForm.class));
+        return SETTINGS_ACCOUNT_VIEW_NAME;
+    }
 
+    @PostMapping(SETTINGS_ACCOUNT_URL)
+    public String updateAccount(@CurrentUser Account account, @Valid NicknameForm nicknameForm,
+                                Model model, Errors errors ,RedirectAttributes attributes){
+
+        if(errors.hasErrors()){
+            model.addAttribute(account);
+            return SETTINGS_ACCOUNT_VIEW_NAME;
+        }
+        accountService.updateNickname(account,nicknameForm.getNickname());
+        attributes.addFlashAttribute("message","닉네임을 변경하였습니다.");
+        return "redirect:" + SETTINGS_ACCOUNT_URL;
     }
 
 
