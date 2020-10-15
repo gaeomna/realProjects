@@ -1,8 +1,6 @@
 package com.wakuza.springboot.realProjects.modules.account;
 
 import lombok.*;
-import org.aspectj.apache.bcel.generic.Tag;
-
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Set;
