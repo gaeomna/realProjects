@@ -1,9 +1,11 @@
 package com.wakuza.springboot.realProjects.modules.account;
 
 import lombok.*;
+import org.aspectj.apache.bcel.generic.Tag;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity @Builder
@@ -57,6 +59,8 @@ public class Account {
 
     private boolean studyUpdatedByWeb = true;
 
+    @ManyToMany
+    private Set<Tags> tags;
 
     public void generateEmailCheckToken() {
         this.emailCheckToken = UUID.randomUUID().toString();
