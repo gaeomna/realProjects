@@ -1,4 +1,4 @@
-package com.wakuza.springboot.realProjects.modules.account;
+package com.wakuza.springboot.realProjects.modules.tag;
 
 
 import lombok.*;
@@ -14,7 +14,7 @@ import javax.persistence.Id;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(of="id")
-public class Tags {
+public class Tag {
 
     @Id@GeneratedValue
     private Long id;

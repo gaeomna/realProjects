@@ -3,24 +3,27 @@ package com.wakuza.springboot.realProjects.modules.settings;
 import com.wakuza.springboot.realProjects.modules.account.Account;
 import com.wakuza.springboot.realProjects.modules.account.AccountService;
 import com.wakuza.springboot.realProjects.modules.account.CurrentUser;
+import com.wakuza.springboot.realProjects.modules.tag.Tag;
+import com.wakuza.springboot.realProjects.modules.tag.TagForm;
 import com.wakuza.springboot.realProjects.modules.settings.form.NicknameForm;
 import com.wakuza.springboot.realProjects.modules.settings.form.Notifications;
 import com.wakuza.springboot.realProjects.modules.settings.form.PasswordForm;
 import com.wakuza.springboot.realProjects.modules.settings.form.Profile;
 import com.wakuza.springboot.realProjects.modules.settings.validator.NicknameFormValidator;
 import com.wakuza.springboot.realProjects.modules.settings.validator.PasswordFormValidator;
+import com.wakuza.springboot.realProjects.modules.tag.TagRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -33,14 +36,15 @@ public class SettingsController {
     static final String SETTINGS_NOTIFICATION_VIEW_NAME = "settings/notifications";
     static final String SETTINGS_NOTIFICATION_URL = "/settings/notifications";
     static final String SETTINGS_ACCOUNT_VIEW_NAME = "settings/account";
-    static final String SETTINGS_ACCOUNT_URL= "/settings/account";
+    static final String SETTINGS_ACCOUNT_URL = "/settings/account";
     static final String SETTINGS_TAGS_VIEW_NAME = "settings/tags";
-    static final String SETTINGS_TAGS_URL= "/settings/tags";
+    static final String SETTINGS_TAGS_URL = "/settings/tags";
 
 
     private final AccountService accountService;
     private final ModelMapper modelMapper;
     private final NicknameFormValidator nicknameFormValidator;
+    private final TagRepository tagRepository;
 
 
     @InitBinder("passwordForm")
@@ -61,7 +65,7 @@ public class SettingsController {
 
         return SETTINGS_PROFILE_VIEW_NAME;
     }
-    
+
     @PostMapping(SETTINGS_PROFILE_URL)
     public String updateProfile(@CurrentUser Account account, @Valid Profile profile,
                                 Errors errors, Model model, RedirectAttributes attributes) {
@@ -78,7 +82,7 @@ public class SettingsController {
     @GetMapping(SETTINGS_PASSWORD_URL)
     public String profilePasswordForm(@CurrentUser Account account, Model model) {
         model.addAttribute(account);
-        model.addAttribute(modelMapper.map(account,PasswordForm.class));
+        model.addAttribute(modelMapper.map(account, PasswordForm.class));
         return SETTINGS_PASSWORD_VIEW_NAME;
     }
 
@@ -96,50 +100,66 @@ public class SettingsController {
     }
 
     @GetMapping(SETTINGS_NOTIFICATION_URL)
-    public String updateNotificationForm(@CurrentUser Account account, Model model){
+    public String updateNotificationForm(@CurrentUser Account account, Model model) {
         model.addAttribute(account);
         model.addAttribute(modelMapper.map(account, Notifications.class));
         return SETTINGS_NOTIFICATION_VIEW_NAME;
     }
 
     @PostMapping(SETTINGS_NOTIFICATION_URL)
-    public String updateNotifications(@CurrentUser Account account,@Valid Notifications notifications,
-                                      Model model,Errors errors,RedirectAttributes attributes){
-        if(errors.hasErrors()){
+    public String updateNotifications(@CurrentUser Account account, @Valid Notifications notifications,
+                                      Model model, Errors errors, RedirectAttributes attributes) {
+        if (errors.hasErrors()) {
             model.addAttribute(account);
             return "redirect:" + SETTINGS_NOTIFICATION_VIEW_NAME;
         }
-        accountService.updateNotifications(account,notifications);
-        attributes.addFlashAttribute("message","알림 설정 했습니다.");
+        accountService.updateNotifications(account, notifications);
+        attributes.addFlashAttribute("message", "알림 설정 했습니다.");
         return SETTINGS_NOTIFICATION_URL;
     }
 
     @GetMapping(SETTINGS_ACCOUNT_URL)
-    public String updateAccountForm(@CurrentUser Account account, Model model){
+    public String updateAccountForm(@CurrentUser Account account, Model model) {
         model.addAttribute(account);
-        model.addAttribute(modelMapper.map(account,NicknameForm.class));
+        model.addAttribute(modelMapper.map(account, NicknameForm.class));
         return SETTINGS_ACCOUNT_VIEW_NAME;
     }
 
     @PostMapping(SETTINGS_ACCOUNT_URL)
     public String updateAccount(@CurrentUser Account account, @Valid NicknameForm nicknameForm,
-                                Model model, Errors errors ,RedirectAttributes attributes){
+                                Model model, Errors errors, RedirectAttributes attributes) {
 
-        if(errors.hasErrors()){
+        if (errors.hasErrors()) {
             model.addAttribute(account);
             return SETTINGS_ACCOUNT_VIEW_NAME;
         }
-        accountService.updateNickname(account,nicknameForm.getNickname());
-        attributes.addFlashAttribute("message","닉네임을 변경하였습니다.");
+        accountService.updateNickname(account, nicknameForm.getNickname());
+        attributes.addFlashAttribute("message", "닉네임을 변경하였습니다.");
         return "redirect:" + SETTINGS_ACCOUNT_URL;
     }
 
     @GetMapping(SETTINGS_TAGS_URL)
-public String updateTags(@CurrentUser Account account, Model model){
+    public String updateTags(@CurrentUser Account account, Model model) {
         model.addAttribute(account);
         return SETTINGS_TAGS_VIEW_NAME;
     }
 
+    @PostMapping("/settings/tags/add")
+    @ResponseBody
+        public ResponseEntity addTag(@CurrentUser Account account, @RequestBody TagForm tagForm){
+        String title = tagForm.getTagTitle();
+//
+        Tag tag = tagRepository.findByTitle(title);
+        if(tag ==  null){
+            tag = tagRepository.save(Tag.builder().title(tagForm.getTagTitle()).build());
+        }
+//        Tag tag = tagRepository.findByTitle(title).orElseGet( () -> tagRepository.save(Tag.builder()
+//        .title(tagForm.getTagTitle())
+//        .build())); Optional<Tag> 사용 tagRepository 반환 타입도 Optional이어야함
+
+        accountService.addTag(account, tag);
+        return ResponseEntity.ok().build();
+    }
 
 
 }

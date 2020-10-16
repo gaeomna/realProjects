@@ -2,6 +2,7 @@ package com.wakuza.springboot.realProjects.modules.account;
 
 import com.wakuza.springboot.realProjects.modules.settings.form.Notifications;
 import com.wakuza.springboot.realProjects.modules.settings.form.Profile;
+import com.wakuza.springboot.realProjects.modules.tag.Tag;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.mail.SimpleMailMessage;
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -119,5 +121,11 @@ public class AccountService  implements UserDetailsService {
         mailMessage.setSubject("realProjects, Login Link");
         mailMessage.setText("/login-by-email?token=" + account.getEmailCheckToken() + "&email=" + account.getEmail());
         javaMailSender.send(mailMessage);
+    }
+
+    public void addTag(Account account, Tag tag) {
+        Optional<Account> byId = accountRepository.findById(account.getId()); //
+        byId.ifPresent(a -> a.getTags().add(tag));
+//        accountRepository.getOne()      레이지 로딩 = 필요한 순간에만 entity manager를 통해 읽어 들임
     }
 }

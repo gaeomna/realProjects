@@ -1,8 +1,10 @@
 package com.wakuza.springboot.realProjects.modules.account;
 
+import com.wakuza.springboot.realProjects.modules.tag.Tag;
 import lombok.*;
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
@@ -58,7 +60,7 @@ public class Account {
     private boolean studyUpdatedByWeb = true;
 
     @ManyToMany
-    private Set<Tags> tags;
+    private Set<Tag> tags;
 
     public void generateEmailCheckToken() {
         this.emailCheckToken = UUID.randomUUID().toString();
