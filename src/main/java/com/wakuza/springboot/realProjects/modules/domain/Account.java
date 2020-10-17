@@ -1,10 +1,8 @@
-package com.wakuza.springboot.realProjects.modules.account;
+package com.wakuza.springboot.realProjects.modules.domain;
 
-import com.wakuza.springboot.realProjects.modules.tag.Tag;
 import lombok.*;
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -17,7 +15,8 @@ import java.util.UUID;
 public class Account {
 
 
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     private Long id;
 
     @Column(unique = true, nullable = false)
@@ -62,6 +61,9 @@ public class Account {
 
     @ManyToMany
     private Set<Tag> tags = new HashSet<>();
+
+    @ManyToMany
+    private Set<Zone> zones = new HashSet<>();
 
     public void generateEmailCheckToken() {
         this.emailCheckToken = UUID.randomUUID().toString();

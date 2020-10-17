@@ -1,9 +1,7 @@
 package com.wakuza.springboot.realProjects.modules.settings.form;
 
 
-import com.wakuza.springboot.realProjects.modules.account.Account;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
 public class Notifications {

@@ -1,6 +1,6 @@
 package com.wakuza.springboot.realProjects.modules.settings.validator;
 
-import com.wakuza.springboot.realProjects.modules.account.Account;
+import com.wakuza.springboot.realProjects.modules.domain.Account;
 import com.wakuza.springboot.realProjects.modules.account.AccountRepository;
 import com.wakuza.springboot.realProjects.modules.settings.form.NicknameForm;
 import lombok.RequiredArgsConstructor;

@@ -1,4 +1,4 @@
-package com.wakuza.springboot.realProjects.modules.account;
+package com.wakuza.springboot.realProjects.modules.domain;
 
 
 import lombok.Getter;

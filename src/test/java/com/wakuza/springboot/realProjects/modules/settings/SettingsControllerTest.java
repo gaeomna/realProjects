@@ -2,14 +2,12 @@ package com.wakuza.springboot.realProjects.modules.settings;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wakuza.springboot.realProjects.WithAccount;
-import com.wakuza.springboot.realProjects.modules.account.Account;
+import com.wakuza.springboot.realProjects.modules.domain.Account;
 import com.wakuza.springboot.realProjects.modules.account.AccountRepository;
 import com.wakuza.springboot.realProjects.modules.account.AccountService;
-import com.wakuza.springboot.realProjects.modules.tag.Tag;
+import com.wakuza.springboot.realProjects.modules.domain.Tag;
 import com.wakuza.springboot.realProjects.modules.tag.TagForm;
 import com.wakuza.springboot.realProjects.modules.tag.TagRepository;
-import lombok.With;
-import org.aspectj.lang.annotation.After;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,11 +16,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.awt.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;

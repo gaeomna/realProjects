@@ -1,8 +1,6 @@
 package com.wakuza.springboot.realProjects.modules.settings.form;
 
-import com.wakuza.springboot.realProjects.modules.account.Account;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
 @Data

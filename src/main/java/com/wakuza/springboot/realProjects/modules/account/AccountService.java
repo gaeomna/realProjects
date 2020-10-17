@@ -1,8 +1,10 @@
 package com.wakuza.springboot.realProjects.modules.account;
 
+import com.wakuza.springboot.realProjects.modules.domain.Account;
+import com.wakuza.springboot.realProjects.modules.domain.Zone;
 import com.wakuza.springboot.realProjects.modules.settings.form.Notifications;
 import com.wakuza.springboot.realProjects.modules.settings.form.Profile;
-import com.wakuza.springboot.realProjects.modules.tag.Tag;
+import com.wakuza.springboot.realProjects.modules.domain.Tag;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.mail.SimpleMailMessage;
@@ -133,5 +135,21 @@ public class AccountService  implements UserDetailsService {
         Optional<Account> byId = accountRepository.findById(account.getId());
         byId.ifPresent(a -> a.getTags().remove(tag));
         //ifPresent = 만약 있으면
+    }
+
+    public Set<Zone> getZones(Account account) {
+        Optional<Account> byId = accountRepository.findById(account.getId());
+        return byId.orElseThrow().getZones();
+
+    }
+
+    public void addZone(Account account, Zone zone) {
+        Optional<Account> byId = accountRepository.findById(account.getId()); //
+        byId.ifPresent(a -> a.getZones().add(zone));
+    }
+
+    public void removeZone(Account account, Zone zone) {
+        Optional<Account> byId = accountRepository.findById(account.getId()); //
+        byId.ifPresent(a -> a.getZones().remove(zone));
     }
 }

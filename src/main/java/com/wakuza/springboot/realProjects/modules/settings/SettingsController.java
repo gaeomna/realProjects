@@ -2,10 +2,11 @@ package com.wakuza.springboot.realProjects.modules.settings;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wakuza.springboot.realProjects.modules.account.Account;
+import com.wakuza.springboot.realProjects.modules.domain.Account;
 import com.wakuza.springboot.realProjects.modules.account.AccountService;
 import com.wakuza.springboot.realProjects.modules.account.CurrentUser;
-import com.wakuza.springboot.realProjects.modules.tag.Tag;
+import com.wakuza.springboot.realProjects.modules.domain.Tag;
+import com.wakuza.springboot.realProjects.modules.domain.Zone;
 import com.wakuza.springboot.realProjects.modules.tag.TagForm;
 import com.wakuza.springboot.realProjects.modules.settings.form.NicknameForm;
 import com.wakuza.springboot.realProjects.modules.settings.form.Notifications;
@@ -14,6 +15,9 @@ import com.wakuza.springboot.realProjects.modules.settings.form.Profile;
 import com.wakuza.springboot.realProjects.modules.settings.validator.NicknameFormValidator;
 import com.wakuza.springboot.realProjects.modules.settings.validator.PasswordFormValidator;
 import com.wakuza.springboot.realProjects.modules.tag.TagRepository;
+import com.wakuza.springboot.realProjects.modules.zone.ZoneForm;
+import com.wakuza.springboot.realProjects.modules.zone.ZoneRepository;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
@@ -22,12 +26,10 @@ import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyEmitterReturnValueHandler;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -45,6 +47,8 @@ public class SettingsController {
     static final String SETTINGS_ACCOUNT_URL = "/settings/account";
     static final String SETTINGS_TAGS_VIEW_NAME = "settings/tags";
     static final String SETTINGS_TAGS_URL = "/settings/tags";
+    static final String SETTINGS_ZONE_VIEW_NAME = "settings/zones";
+    static final String SETTINGS_ZONE_URL = "/settings/zones";
 
 
     private final AccountService accountService;
@@ -52,7 +56,7 @@ public class SettingsController {
     private final NicknameFormValidator nicknameFormValidator;
     private final TagRepository tagRepository;
     private final ObjectMapper objectMapper;
-
+    private final ZoneRepository zoneRepository;
 
     @InitBinder("passwordForm")
     public void passwordFormInitBinder(WebDataBinder webDateBinder) {
@@ -152,7 +156,6 @@ public class SettingsController {
         model.addAttribute("tags",tags.stream().map(Tag::getTitle).collect(Collectors.toList()));
         //tags.stream을 map안에 들어있는 Tag들을 Title만 가져오면 문자열로 바뀌고,이 문자열을 collect(수집)해서 collectors의 list로 변환해서
         //"tags"에 담는다.  메소드 체이닝.
-
         List<String> allTags = tagRepository.findAll().stream().map(Tag::getTitle).collect(Collectors.toList());
         model.addAttribute("whitelist",objectMapper.writeValueAsString(allTags));
 
@@ -184,6 +187,43 @@ public class SettingsController {
             return ResponseEntity.badRequest().build();
         }
         accountService.removeTag(account, tag);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping(SETTINGS_ZONE_URL)
+    public String updateZonesForm(@CurrentUser Account account, Model model) throws JsonProcessingException {
+        model.addAttribute(account);
+
+        Set<Zone> zones = accountService.getZones(account);
+        model.addAttribute("zones",zones.stream().map(Zone::toString).collect(Collectors.toList()));
+        //tags.stream을 map안에 들어있는 Tag들을 Title만 가져오면 문자열로 바뀌고,이 문자열을 collect(수집)해서 collectors의 list로 변환해서
+        //"tags"에 담는다.  메소드 체이닝.
+        List<String> allZones = zoneRepository.findAll().stream().map(Zone::toString).collect(Collectors.toList());
+        model.addAttribute("whitelist",objectMapper.writeValueAsString(allZones));
+
+        return SETTINGS_ZONE_VIEW_NAME;
+    }
+
+
+    @PostMapping(SETTINGS_ZONE_URL+ "/add")
+    @ResponseBody
+    public ResponseEntity addZone(@CurrentUser Account account, @RequestBody ZoneForm zoneForm) {
+        Zone zone = zoneRepository.findByCityAndProvince(zoneForm.getCityName(),zoneForm.getProvinceName());
+        if (zone == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        accountService.addZone(account, zone);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping(SETTINGS_ZONE_URL + "/remove")
+    @ResponseBody
+    public ResponseEntity removeZone(@CurrentUser Account account, @RequestBody ZoneForm zoneForm) {
+        Zone zone = zoneRepository.findByCityAndProvince(zoneForm.getCityName(),zoneForm.getProvinceName());
+        if (zone == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        accountService.removeZone(account, zone);
         return ResponseEntity.ok().build();
     }
 
