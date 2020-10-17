@@ -1,5 +1,7 @@
 package com.wakuza.springboot.realProjects.modules.settings;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wakuza.springboot.realProjects.modules.account.Account;
 import com.wakuza.springboot.realProjects.modules.account.AccountService;
 import com.wakuza.springboot.realProjects.modules.account.CurrentUser;
@@ -20,10 +22,14 @@ import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyEmitterReturnValueHandler;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
@@ -45,6 +51,7 @@ public class SettingsController {
     private final ModelMapper modelMapper;
     private final NicknameFormValidator nicknameFormValidator;
     private final TagRepository tagRepository;
+    private final ObjectMapper objectMapper;
 
 
     @InitBinder("passwordForm")
@@ -139,25 +146,44 @@ public class SettingsController {
     }
 
     @GetMapping(SETTINGS_TAGS_URL)
-    public String updateTags(@CurrentUser Account account, Model model) {
+    public String updateTags(@CurrentUser Account account, Model model) throws JsonProcessingException {
         model.addAttribute(account);
+        Set<Tag> tags = accountService.getTags(account);
+        model.addAttribute("tags",tags.stream().map(Tag::getTitle).collect(Collectors.toList()));
+        //tags.stream을 map안에 들어있는 Tag들을 Title만 가져오면 문자열로 바뀌고,이 문자열을 collect(수집)해서 collectors의 list로 변환해서
+        //"tags"에 담는다.  메소드 체이닝.
+
+        List<String> allTags = tagRepository.findAll().stream().map(Tag::getTitle).collect(Collectors.toList());
+        model.addAttribute("whitelist",objectMapper.writeValueAsString(allTags));
+
         return SETTINGS_TAGS_VIEW_NAME;
     }
 
-    @PostMapping("/settings/tags/add")
+    @PostMapping(SETTINGS_TAGS_URL+ "/add")
     @ResponseBody
-        public ResponseEntity addTag(@CurrentUser Account account, @RequestBody TagForm tagForm){
+    public ResponseEntity addTag(@CurrentUser Account account, @RequestBody TagForm tagForm) {
         String title = tagForm.getTagTitle();
-//
         Tag tag = tagRepository.findByTitle(title);
-        if(tag ==  null){
-            tag = tagRepository.save(Tag.builder().title(tagForm.getTagTitle()).build());
+        if (tag == null) {
+            tag = tagRepository.save(Tag.builder().title(title).build());
         }
 //        Tag tag = tagRepository.findByTitle(title).orElseGet( () -> tagRepository.save(Tag.builder()
 //        .title(tagForm.getTagTitle())
 //        .build())); Optional<Tag> 사용 tagRepository 반환 타입도 Optional이어야함
 
         accountService.addTag(account, tag);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping(SETTINGS_TAGS_URL + "/remove")
+    @ResponseBody
+    public ResponseEntity removeTag(@CurrentUser Account account, @RequestBody TagForm tagForm) {
+        String title = tagForm.getTagTitle();
+        Tag tag = tagRepository.findByTitle(title);
+        if (tag == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        accountService.removeTag(account, tag);
         return ResponseEntity.ok().build();
     }
 

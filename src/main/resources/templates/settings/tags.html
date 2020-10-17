@@ -19,6 +19,7 @@
                         또는 엔터를 입력하세요.
                     </div>
                     <div id="whitelist" th:text="${whitelist}" hidden></div>
+<!--                    현재 정보 List<String> tags = List.of("Sprig","Hibernate","JPA" => Spring.Hibernate,JPA-->
                     <input id="tags" type="text" name="tags" th:value="${#strings.listJoin(tags, ',')}"
                            class="tagify-outside" aria-describedby="tagHelp"/>
                 </div>
@@ -27,15 +28,15 @@
     </div>
 </div>
 <script src="/node_modules/@yaireo/tagify/dist/tagify.min.js"></script>
-<!--<script type="application/javascript" th:inline="javascript">-->
-<!--    $(function() {-->
-<!--        var csrfToken = /*[[${_csrf.token}]]*/ null;-->
-<!--        var csrfHeader = /*[[${_csrf.headerName}]]*/ null;-->
-<!--        $(document).ajaxSend(function (e, xhr, options) {-->
-<!--            xhr.setRequestHeader(csrfHeader, csrfToken);-->
-<!--        });-->
-<!--    });-->
-<!--</script>-->
+<script type="application/javascript" th:inline="javascript">
+    $(function() {
+        var csrfToken = /*[[${_csrf.token}]]*/ null;
+        var csrfHeader = /*[[${_csrf.headerName}]]*/ null;
+        $(document).ajaxSend(function (e, xhr, options) {
+            xhr.setRequestHeader(csrfHeader, csrfToken);
+        });
+    });
+</script>
 <script type="application/javascript">
        $(function() {
             function tagRequest(url, tagTitle) {
@@ -55,18 +56,18 @@
             }
 
             function onAdd(e) {
-                tagRequest("/settings/tags/add", e.detail.data.value);
+                tagRequest("/add", e.detail.data.value);
             }
 
             function onRemove(e) {
-                tagRequest("/settings/tags/remove", e.detail.data.value);
+                tagRequest("/remove", e.detail.data.value);
             }
 
             var tagInput = document.querySelector("#tags");
 
             var tagify = new Tagify(tagInput, {
                 pattern: /^.{0,20}$/,
-<!--                whitelist: JSON.parse(document.querySelector("#whitelist").textContent),-->
+                whitelist: JSON.parse(document.querySelector("#whitelist").textContent),
                 dropdown : {
                     enabled: 1,
                 }
