@@ -6,11 +6,12 @@ import com.wakuza.springboot.realProjects.modules.domain.Account;
 import com.wakuza.springboot.realProjects.modules.account.AccountRepository;
 import com.wakuza.springboot.realProjects.modules.account.AccountService;
 import com.wakuza.springboot.realProjects.modules.domain.Tag;
-import com.wakuza.springboot.realProjects.modules.tag.TagForm;
-import com.wakuza.springboot.realProjects.modules.tag.TagRepository;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import com.wakuza.springboot.realProjects.modules.domain.Zone;
+import com.wakuza.springboot.realProjects.modules.settings.tag.TagForm;
+import com.wakuza.springboot.realProjects.modules.settings.tag.TagRepository;
+import com.wakuza.springboot.realProjects.modules.settings.zone.ZoneForm;
+import com.wakuza.springboot.realProjects.modules.settings.zone.ZoneRepository;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -37,11 +38,19 @@ class SettingsControllerTest {
     @Autowired ObjectMapper objectMapper;
     @Autowired TagRepository tagRepository;
     @Autowired AccountService accountService;
+    @Autowired ZoneRepository zoneRepository;
 
+    private Zone testZone = Zone.builder().city("test").localNameOfcity("테스트시").province("테스트주").build();
+
+    @BeforeEach
+    void beforeEach(){
+        zoneRepository.save(testZone);
+    }
 
     @AfterEach
     void afterEach() {
         accountRepository.deleteAll();
+        zoneRepository.deleteAll();
     }
 
     @WithAccount("gaeomna")
@@ -137,7 +146,7 @@ class SettingsControllerTest {
         mockMvc.perform(get(SettingsController.SETTINGS_NOTIFICATION_URL))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("account"))
-                .andExpect(model().attributeExists("Notifications"));
+                .andExpect(model().attributeExists("notifications"));
     }
 
     @WithAccount("gaeomna")
@@ -189,6 +198,53 @@ class SettingsControllerTest {
                 .andExpect(status().isOk());
 
         assertFalse(gaeomna.getTags().contains(newTag));
+    }
+    @WithAccount("gaeomna")
+    @DisplayName("계정의 지역 정보 수정 폼")
+    @Test
+    void updateZoneForm() throws Exception {
+        mockMvc.perform(get(SettingsController.SETTINGS_ZONE_URL))
+                .andExpect(view().name(SettingsController.SETTINGS_ZONE_VIEW_NAME))
+                .andExpect(model().attributeExists("account"))
+                .andExpect(model().attributeExists("whitelist"))
+                .andExpect(model().attributeExists("zones"));
+    }
+
+    @WithAccount("gaeomna")
+    @DisplayName("계정의 지역 정보 추가")
+    @Test
+    void addZone() throws Exception {
+        ZoneForm zoneForm = new ZoneForm();
+        zoneForm.setZoneName(testZone.toString());
+
+        mockMvc.perform(post(SettingsController.SETTINGS_ZONE_URL + "/add")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(zoneForm)) //content("{\"tagTitle\": \"newTag\"}");
+                .with(csrf()))
+                .andExpect(status().isOk());
+        Account gaeomna = accountRepository.findByNickname("gaeomna");
+        Zone zone = zoneRepository.findByCityAndProvince(testZone.getCity(), testZone.getProvince());
+        assertTrue(gaeomna.getZones().contains(zone));
+    }
+
+    @WithAccount("gaeomna")
+    @DisplayName("계정의 지역 정보 삭제")
+    @Test
+    void removeZone() throws Exception {
+        Account gaeomna =accountRepository.findByNickname("gaeomna");
+        Zone zone = zoneRepository.findByCityAndProvince(testZone.getCity(), testZone.getProvince());
+        accountService.addZone(gaeomna,zone);
+
+        ZoneForm zoneForm = new ZoneForm();
+        zoneForm.setZoneName(testZone.toString());
+
+        mockMvc.perform(post(SettingsController.SETTINGS_ZONE_URL + "/remove")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(zoneForm)) //content("{\"tagTitle\": \"newTag\"}");
+                .with(csrf()))
+                .andExpect(status().isOk());
+
+        assertFalse(gaeomna.getZones().contains(zone));
     }
 
 

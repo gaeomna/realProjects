@@ -1,4 +1,4 @@
-package com.wakuza.springboot.realProjects.modules.tag;
+package com.wakuza.springboot.realProjects.modules.settings.tag;
 
 import com.wakuza.springboot.realProjects.modules.domain.Tag;
 import org.springframework.data.jpa.repository.JpaRepository;

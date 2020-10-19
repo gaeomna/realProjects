@@ -1,4 +1,4 @@
-package com.wakuza.springboot.realProjects.modules.zone;
+package com.wakuza.springboot.realProjects.modules.settings.zone;
 
 import com.wakuza.springboot.realProjects.modules.domain.Zone;
 import lombok.RequiredArgsConstructor;
