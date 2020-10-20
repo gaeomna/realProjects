@@ -4,6 +4,7 @@ import com.mysql.cj.protocol.Security;
 import com.wakuza.springboot.realProjects.modules.account.AccountService;
 import com.wakuza.springboot.realProjects.modules.account.SignUpForm;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -19,6 +20,7 @@ public class WithAccountSecurityContextFactory implements WithSecurityContextFac
 
 
 
+    @SneakyThrows
     @Override
     public SecurityContext createSecurityContext(WithAccount withAccount) {
         String nickname = withAccount.value();

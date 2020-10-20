@@ -12,6 +12,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 
+import javax.mail.MessagingException;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.authentication;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -30,7 +32,7 @@ class MainControllerTest {
     @Autowired AccountRepository accountRepository;
 
     @BeforeEach //테스트를 시작 전에 실행 .
-    void beforeEach(){
+    void beforeEach() throws MessagingException {
         SignUpForm signUpForm = new SignUpForm();
         signUpForm.setNickname("gaeomna");
         signUpForm.setEmail("gaeomna@naver.com");

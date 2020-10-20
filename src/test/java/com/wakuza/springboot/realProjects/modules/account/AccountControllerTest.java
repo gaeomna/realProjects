@@ -1,5 +1,7 @@
 package com.wakuza.springboot.realProjects.modules.account;
 
+import com.wakuza.springboot.realProjects.infra.mail.EmailMessage;
+import com.wakuza.springboot.realProjects.infra.mail.EmailService;
 import com.wakuza.springboot.realProjects.modules.domain.Account;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -33,7 +35,7 @@ public class AccountControllerTest {
     private AccountRepository accountRepository;
 
     @MockBean
-    JavaMailSender javaMailSender;
+    EmailService emailService;
 
     @DisplayName("회원 가입 화면 보이는지 테스트")
     @Test
@@ -75,7 +77,7 @@ public class AccountControllerTest {
         assertNotEquals(account.getPassword(),"12345678");
         assertNotNull(account.getEmailCheckToken());
 //        assertTrue(accountRepository.existsByEmail("gaeomna@naver.com"));
-        then(javaMailSender).should().send(any(SimpleMailMessage.class));
+        then(emailService).should().sendEmail(any(EmailMessage.class));
 
     }
 
