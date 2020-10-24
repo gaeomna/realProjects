@@ -74,7 +74,7 @@
                     </a>
                 </span>
                 <span th:each="zone: ${study.zones}" class="font-weight-light text-monospace badge badge-primary mr-3">
-                    <a th:href="@{'/search/zone/' + ${zone.id}}" class="text-decoration-none text-white">
+                    <a th:href="@{'/search/zone/' + ${zone.id}}" class="text-decorat`ion-none text-white">
                         <i class="fa fa-globe"></i> <span th:text="${zone.localNameOfCity}">City</span>
                     </a>
                 </span>
@@ -85,7 +85,6 @@
 
     <div th:replace="fragments.html :: footer"></div>
 </div>
-
 <script type="application/javascript">
     $(function () {
         $('[data-toggle="tooltip"]').tooltip()
