@@ -203,7 +203,7 @@ public class SettingsController {
     }
 
 
-    @PostMapping(ZONE+ "/add")
+    @PostMapping(ZONE + "/add")
     @ResponseBody
     public ResponseEntity addZone(@CurrentUser Account account, @RequestBody ZoneForm zoneForm) {
         Zone zone = zoneRepository.findByCityAndProvince(zoneForm.getCityName(),zoneForm.getProvinceName());
