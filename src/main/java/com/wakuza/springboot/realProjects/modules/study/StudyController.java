@@ -53,17 +53,17 @@ public class StudyController {
         return "redirect:/study/" + URLEncoder.encode(newStudy.getPath(), StandardCharsets.UTF_8);
     }
 
+
     @GetMapping("/study/{path}")
     public String viewStudy(@CurrentUser Account account,@PathVariable String path, Model model){
-        study study = studyService.getStudy(path);
-
+        Study study = studyService.getStudy(path);
         model.addAttribute(account);
         model.addAttribute(studyRepository.findByPath(path));
         return "study/view";
     }
     @GetMapping("/study/{path}/members")
     public String viewStudyMembers(@CurrentUser Account account,@PathVariable String path, Model model){
-        study study = studyService.getStudy(path);
+        Study study = studyService.getStudy(path);
         model.addAttribute(account);
         model.addAttribute(study);
         return "study/members";

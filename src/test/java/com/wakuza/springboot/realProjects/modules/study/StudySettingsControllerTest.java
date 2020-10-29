@@ -25,13 +25,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @Transactional
 @RequiredArgsConstructor
-class StudyControllerTest {
+class StudySettingsControllerTest {
 
 
     @Autowired MockMvc mockMvc;
     @Autowired StudyRepository studyRepository;
     @Autowired AccountRepository accountRepository;
     @Autowired StudyService studyService;
+    @Autowired Study study;
 
     @WithAccount("gaeomna")
     @DisplayName("스터디 개설 폼 조회")
@@ -67,7 +68,7 @@ class StudyControllerTest {
     @DisplayName("스터디 개설 - 실패")
     @Test
     void createStudy_fails() throws Exception {
-        mockMvc.perform(post("/new-study")
+        mockMvc.perform(post("/new-Wstudy")
                 .param("path", "wrong path")
                 .param("title", "study title")
                 .param("shortDescription", "short description of a study")
@@ -98,6 +99,35 @@ class StudyControllerTest {
 
         mockMvc.perform(get("/study/test-path"))
                 .andExpect(view().name("study/view"))
+                .andExpect(model().attributeExists("account"))
+                .andExpect(model().attributeExists("study"));
+    }
+
+
+    @WithAccount("gaeomna")
+    @DisplayName("스터디 설정 폼 조회")
+    @Test
+    void studyViewPage() throws Exception {
+
+        Account gaeomna = accountRepository.findByNickname("gaeomna");
+        mockMvc.perform(get("/study/gaeomns-path/settings/description"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("study/settings/description"))
+                .andExpect(model().attributeExists("gaeomna"))
+                .andExpect(model().attributeExists("study"))
+                .andExpect(model().attributeExists("studyDescriptionForm"));
+    }
+
+    @Test
+    @WithAccount("keesun")
+    @DisplayName("스터디 소개 수정 폼 조회 - 성공")
+    void updateDescriptionForm_success() throws Exception {
+        Account keesun = accountRepository.findByNickname("keesun");
+
+        mockMvc.perform(get("/study/" + study.getPath() + "/settings/description"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("study/settings/description"))
+                .andExpect(model().attributeExists("studyDescriptionForm"))
                 .andExpect(model().attributeExists("account"))
                 .andExpect(model().attributeExists("study"));
     }
