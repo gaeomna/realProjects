@@ -10,11 +10,12 @@ import java.util.HashSet;
 import java.util.Set;
 
 
-@NamedEntityGraph(name = "Study.withAll",attributeNodes = {
+@NamedEntityGraph(name = "Study.withTagsAndManagers",attributeNodes = {
         @NamedAttributeNode("tags"),
+        @NamedAttributeNode("managers")})
+@NamedEntityGraph(name = "Study.withZonesAndManagers",attributeNodes = {
         @NamedAttributeNode("zones"),
-        @NamedAttributeNode("managers"),
-        @NamedAttributeNode("members")})
+        @NamedAttributeNode("managers")})
 @Entity
 @Builder
 @Getter @Setter

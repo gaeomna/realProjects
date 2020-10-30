@@ -12,6 +12,7 @@ import com.wakuza.springboot.realProjects.modules.settings.form.NicknameForm;
 import com.wakuza.springboot.realProjects.modules.settings.form.Notifications;
 import com.wakuza.springboot.realProjects.modules.settings.form.PasswordForm;
 import com.wakuza.springboot.realProjects.modules.settings.form.Profile;
+import com.wakuza.springboot.realProjects.modules.settings.tag.TagService;
 import com.wakuza.springboot.realProjects.modules.settings.validator.NicknameFormValidator;
 import com.wakuza.springboot.realProjects.modules.settings.validator.PasswordFormValidator;
 import com.wakuza.springboot.realProjects.modules.settings.tag.TagRepository;
@@ -55,6 +56,7 @@ public class SettingsController {
     private final TagRepository tagRepository;
     private final ObjectMapper objectMapper;
     private final ZoneRepository zoneRepository;
+    private final TagService tagService;
 
     @InitBinder("passwordForm")
     public void passwordFormInitBinder(WebDataBinder webDateBinder) {
@@ -163,15 +165,7 @@ public class SettingsController {
     @PostMapping(TAGS + "/add")
     @ResponseBody
     public ResponseEntity addTag(@CurrentUser Account account, @RequestBody TagForm tagForm) {
-        String title = tagForm.getTagTitle();
-        Tag tag = tagRepository.findByTitle(title);
-        if (tag == null) {
-            tag = tagRepository.save(Tag.builder().title(title).build());
-        }
-//        Tag tag = tagRepository.findByTitle(title).orElseGet( () -> tagRepository.save(Tag.builder()
-//        .title(tagForm.getTagTitle())
-//        .build())); Optional<Tag> 사용 tagRepository 반환 타입도 Optional이어야함
-
+        Tag tag = tagService.findOrCreateNew(tagForm.getTagTitle());
         accountService.addTag(account, tag);
         return ResponseEntity.ok().build();
     }
