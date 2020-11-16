@@ -5,6 +5,8 @@ import com.wakuza.springboot.realProjects.modules.account.UserAccount;
 import lombok.*;
 
 import javax.persistence.*;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -84,9 +86,6 @@ public class Study {
         this.managers.add(account);
     }
 
-    public void addMember(Account account) {
-        this.members.add(account);
-    }
     public String getImage() {
         return image != null ? image : "/images/default_banner.png";
     }
@@ -148,6 +147,18 @@ public class Study {
         return !this.published; // TODO 모임을 했던 스터디는 삭제할 수 없다.
     }
 
+    public void addMember(Account account) {
+        this.getMembers().add(account);
+    }
+
+    public void removeMember(Account account){
+        this.getMembers().remove(account);
+    }
+
+
+    public String getEncodedPath(){
+        return URLEncoder.encode(this.path, StandardCharsets.UTF_8);
+    }
 }
 
 
