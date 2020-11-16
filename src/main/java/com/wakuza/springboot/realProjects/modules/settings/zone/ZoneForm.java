@@ -29,7 +29,7 @@ public class ZoneForm {
     public Zone getZone(){
         return Zone.builder()
                 .city(this.getCityName())
-                .localNameOfcity(this.getLocalNameOfCity())
+                .localNameOfCity(this.getLocalNameOfCity())
                 .province(this.getProvinceName())
                 .build();
     }

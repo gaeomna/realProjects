@@ -7,11 +7,14 @@ import com.wakuza.springboot.realProjects.modules.domain.Tag;
 import com.wakuza.springboot.realProjects.modules.domain.Zone;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
+
+import static com.wakuza.springboot.realProjects.modules.study.form.StudyForm.VALID_PATH_PATTERN;
 
 @Transactional
 @Service
@@ -69,14 +72,14 @@ public class StudyService {
     }
 
     public Study getStudyToUpdateTag(Account account, String path){
-        Study study = studyRepository.findAccountWithTagsByPath(path);
+        Study study = studyRepository.findStudyWithTagsByPath(path);
         checkIfExistingsStudy(path,study);
         checkIfManager(account,study);
         return study;
     }
 
     public Study getStudyToUpdateZone(Account account, String path){
-        Study study = studyRepository.findAccountWithZonesByPath(path);
+        Study study = studyRepository.findStudyWithZonesByPath(path);
         checkIfExistingsStudy(path,study);
         checkIfManager(account,study);
         return study;
@@ -94,4 +97,45 @@ public class StudyService {
         }
     }
 
+    public Study getStudyToUpdateStatus(Account account, String path) {
+        Study study = studyRepository.findStudyWithManagersByPath(path);
+        checkIfExistingsStudy(path,study);
+        checkIfManager(account,study);
+        return study;
+    }
+
+    public void publish(Study study) {
+        study.publish();
+    }
+
+    public void close(Study study) {
+        study.close();
+    }
+
+    public void startRecruit(Study study) {
+        study.startRecruit();
+    }
+
+    public void stopRecruit(Study study) {
+        study.stopRecruit();
+    }
+
+    public boolean isValidPath(String newPath) {
+        if(!newPath.matches(VALID_PATH_PATTERN)){
+            return false;
+        }
+        return !studyRepository.existsByPath(newPath);
+    }
+
+    public void updateStudyPath(Study study, String newPath) {
+        study.setPath(newPath);
+    }
+
+    public boolean isValidTitle(String newTitle) {
+        return newTitle.length() <= 50;
+    }
+
+    public void updateStudyTitle(Study study, String newTitle) {
+        study.setTitle(newTitle);
+    }
 }

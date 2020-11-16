@@ -41,7 +41,7 @@ class SettingsControllerTest {
     @Autowired AccountService accountService;
     @Autowired ZoneRepository zoneRepository;
 
-    private Zone testZone = Zone.builder().city("test").localNameOfcity("테스트시").province("테스트주").build();
+    private Zone testZone = Zone.builder().city("test").localNameOfCity("테스트시").province("테스트주").build();
 
     @BeforeEach
     void beforeEach(){

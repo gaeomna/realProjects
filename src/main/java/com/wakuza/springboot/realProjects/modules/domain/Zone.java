@@ -22,15 +22,14 @@ public class Zone {
     private String city;
 
     @Column(nullable = false)
-    private String localNameOfcity;
-
+    private String localNameOfCity;
 
     @Column(nullable = true)
     private String province;
 
     @Override
     public String toString(){
-        return String.format("%s(%s)/%s",city,localNameOfcity,province);
+        return String.format("%s(%s)/%s",city,localNameOfCity,province);
     }
 
 }
