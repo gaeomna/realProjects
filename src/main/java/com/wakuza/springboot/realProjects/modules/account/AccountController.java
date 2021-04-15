@@ -71,13 +71,13 @@ public class AccountController {
         }
 
     @GetMapping("/check-email")
-    public String checkEmail(@CurrentUser Account account, Model model){
+    public String checkEmail(@CurrentAccount Account account, Model model){
         model.addAttribute("email",account.getEmail());
         return "account/check-email";
     }
 
     @GetMapping("/resend-confirm-email")
-    public String resendConfirmEmail(@CurrentUser Account account,Model model) throws MessagingException {
+    public String resendConfirmEmail(@CurrentAccount Account account,Model model) throws MessagingException {
         if(!account.canSendConfirmEmail()){
             model.addAttribute("error","인증 이메일은 1시간에 1번만 전송할 수 있습니다.");
             model.addAttribute("email",account.getEmail());
@@ -89,7 +89,7 @@ public class AccountController {
     }
 
     @GetMapping("/profile/{nickname}")
-    public String viewProfile(@PathVariable String nickname, Model model, @CurrentUser Account account){
+    public String viewProfile(@PathVariable String nickname, Model model, @CurrentAccount Account account){
         Account accountToView = accountService.getAccount(nickname);
         model.addAttribute(accountToView);
         model.addAttribute("isOwner",accountToView.equals(account));

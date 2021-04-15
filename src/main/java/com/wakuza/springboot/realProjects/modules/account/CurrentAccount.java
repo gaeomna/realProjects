@@ -25,5 +25,5 @@ import java.lang.annotation.Target;
 //        ElementType.TYPE_USE // 타입 사용시
 //})
 @AuthenticationPrincipal(expression = "#this == 'anonymousUser' ? null : account")
-public @interface CurrentUser {
+public @interface CurrentAccount {
 }

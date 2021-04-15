@@ -3,7 +3,7 @@ package com.wakuza.springboot.realProjects.modules.study;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wakuza.springboot.realProjects.modules.account.CurrentUser;
+import com.wakuza.springboot.realProjects.modules.account.CurrentAccount;
 import com.wakuza.springboot.realProjects.modules.domain.Account;
 import com.wakuza.springboot.realProjects.modules.domain.Study;
 import com.wakuza.springboot.realProjects.modules.domain.Tag;
@@ -52,7 +52,7 @@ public class StudySettingsController {
 
 
     @GetMapping("/description")
-    public String viewStudySetting(@CurrentUser Account account, @PathVariable String path, Model model){
+    public String viewStudySetting(@CurrentAccount Account account, @PathVariable String path, Model model){
         Study study = studyService.getStudyToUpdate(account,path);
         model.addAttribute(account);
         model.addAttribute(study);
@@ -61,7 +61,7 @@ public class StudySettingsController {
     }
 
     @PostMapping("/description")
-    public String updateStudyInfo(@CurrentUser Account account, @PathVariable String path,
+    public String updateStudyInfo(@CurrentAccount Account account, @PathVariable String path,
                                   @Valid StudyDescriptionForm studyDescriptionForm, Model model, Errors errors,
                                   RedirectAttributes attributes){
         Study study = studyService.getStudyToUpdate(account, path);
@@ -77,7 +77,7 @@ public class StudySettingsController {
 
 
     @GetMapping("/banner")
-    public String studyImageForm(@CurrentUser Account account,@PathVariable String path, Model model){
+    public String studyImageForm(@CurrentAccount Account account,@PathVariable String path, Model model){
         Study study = studyService.getStudyToUpdate(account,path);
         model.addAttribute(account);
         model.addAttribute(study);
@@ -85,7 +85,7 @@ public class StudySettingsController {
     }
 
     @PostMapping("/banner")
-    public String studyImageSubmit(@CurrentUser Account account, @PathVariable String path,
+    public String studyImageSubmit(@CurrentAccount Account account, @PathVariable String path,
                            String image, RedirectAttributes attributes){
         Study study = studyService.getStudyToUpdate(account, path);
         studyService.updateStudyImage(study,image);
@@ -94,21 +94,21 @@ public class StudySettingsController {
     }
 
     @PostMapping("/banner/enable")
-    public String enableStudyBanner(@CurrentUser Account account, @PathVariable String path){
+    public String enableStudyBanner(@CurrentAccount Account account, @PathVariable String path){
         Study study = studyService.getStudyToUpdate(account, path);
         studyService.enableStudyBanner(study);
         return "redirect:/study/" + study.getEncodedPath() + "/settings/banner";
     }
 
     @PostMapping("/banner/disable")
-    public String disableStudyBanner(@CurrentUser Account account, @PathVariable String path){
+    public String disableStudyBanner(@CurrentAccount Account account, @PathVariable String path){
         Study study = studyService.getStudyToUpdate(account, path);
         studyService.DisableStudyBanner(study);
         return "redirect:/study/" + study.getEncodedPath() + "/settings/banner";
     }
 
     @GetMapping("/tags")
-    public String studyTagsForm(@CurrentUser Account account,@PathVariable String path, Model model) throws JsonProcessingException {
+    public String studyTagsForm(@CurrentAccount Account account,@PathVariable String path, Model model) throws JsonProcessingException {
         Study study = studyService.getStudyToUpdate(account,path);
         model.addAttribute(account);
         model.addAttribute(study);
@@ -121,7 +121,7 @@ public class StudySettingsController {
 
     @PostMapping("/tags/add")
     @ResponseBody
-    public ResponseEntity addTag(@CurrentUser Account account,@PathVariable String path,
+    public ResponseEntity addTag(@CurrentAccount Account account,@PathVariable String path,
                                  @RequestBody TagForm tagForm) {
         Study study = studyService.getStudyToUpdateTag(account,path);
         Tag tag = tagService.findOrCreateNew(tagForm.getTagTitle());
@@ -131,7 +131,7 @@ public class StudySettingsController {
 
     @PostMapping("/tags/remove")
     @ResponseBody
-    public ResponseEntity removeTag(@CurrentUser Account account,@PathVariable String path,
+    public ResponseEntity removeTag(@CurrentAccount Account account,@PathVariable String path,
                                  @RequestBody TagForm tagForm) {
         Study study = studyService.getStudyToUpdateTag(account,path);
         Tag tag = tagRepository.findByTitle(tagForm.getTagTitle());
@@ -142,7 +142,7 @@ public class StudySettingsController {
         return ResponseEntity.ok().build();
     }
     @GetMapping("/zones")
-    public String studyZonesForm(@CurrentUser Account account,@PathVariable String path, Model model) throws JsonProcessingException {
+    public String studyZonesForm(@CurrentAccount Account account,@PathVariable String path, Model model) throws JsonProcessingException {
         Study study = studyService.getStudyToUpdate(account,path);
         model.addAttribute(account);
         model.addAttribute(study);
@@ -154,7 +154,7 @@ public class StudySettingsController {
 
     @PostMapping("/zones/add")
     @ResponseBody
-    public ResponseEntity addZones(@CurrentUser Account account,@PathVariable String path,
+    public ResponseEntity addZones(@CurrentAccount Account account,@PathVariable String path,
                                  @RequestBody ZoneForm zoneForm) {
         Study study = studyService.getStudyToUpdateZone(account,path);
         Zone zone =  zoneRepository.findByCityAndProvince(zoneForm.getCityName(),zoneForm.getProvinceName());
@@ -164,7 +164,7 @@ public class StudySettingsController {
 
     @PostMapping("/zones/remove")
     @ResponseBody
-    public ResponseEntity removeZones(@CurrentUser Account account,@PathVariable String path,
+    public ResponseEntity removeZones(@CurrentAccount Account account,@PathVariable String path,
                                  @RequestBody ZoneForm zoneForm) {
         Study study = studyService.getStudyToUpdateZone(account,path);
         Zone zone = zoneRepository.findByCityAndProvince(zoneForm.getCityName(),zoneForm.getProvinceName());
@@ -175,7 +175,7 @@ public class StudySettingsController {
         return ResponseEntity.ok().build();
     }
     @GetMapping("/study")
-    public String studySettingForm(@CurrentUser Account account, @PathVariable String path, Model model) {
+    public String studySettingForm(@CurrentAccount Account account, @PathVariable String path, Model model) {
         Study study = studyService.getStudyToUpdate(account, path);
         model.addAttribute(account);
         model.addAttribute(study);
@@ -183,7 +183,7 @@ public class StudySettingsController {
     }
 
     @PostMapping("/study/publish")
-    public String publishStudy(@CurrentUser Account account, @PathVariable String path,
+    public String publishStudy(@CurrentAccount Account account, @PathVariable String path,
                                RedirectAttributes attributes) {
         Study study = studyService.getStudyToUpdateStatus(account, path);
         studyService.publish(study);
@@ -192,7 +192,7 @@ public class StudySettingsController {
     }
 
     @PostMapping("/study/close")
-    public String closeStudy(@CurrentUser Account account, @PathVariable String path,
+    public String closeStudy(@CurrentAccount Account account, @PathVariable String path,
                              RedirectAttributes attributes) {
         Study study = studyService.getStudyToUpdateStatus(account, path);
         studyService.close(study);
@@ -201,7 +201,7 @@ public class StudySettingsController {
     }
 
     @PostMapping("/recruit/start")
-    public String startRecruit(@CurrentUser Account account, @PathVariable String path, Model model,
+    public String startRecruit(@CurrentAccount Account account, @PathVariable String path, Model model,
                                RedirectAttributes attributes) {
         Study study = studyService.getStudyToUpdateStatus(account, path);
         if (!study.canUpdateRecruiting()) {
@@ -215,7 +215,7 @@ public class StudySettingsController {
     }
 
     @PostMapping("/recruit/stop")
-    public String stopRecruit(@CurrentUser Account account, @PathVariable String path, Model model,
+    public String stopRecruit(@CurrentAccount Account account, @PathVariable String path, Model model,
                               RedirectAttributes attributes) {
         Study study = studyService.getStudyToUpdate(account, path);
         if (!study.canUpdateRecruiting()) {
@@ -229,7 +229,7 @@ public class StudySettingsController {
     }
 
     @PostMapping("/study/path")
-    public String updateStudyPath(@CurrentUser Account account, @PathVariable String path,@RequestParam String newPath,
+    public String updateStudyPath(@CurrentAccount Account account, @PathVariable String path,@RequestParam String newPath,
                                   Model model,RedirectAttributes attributes){
         Study study = studyService.getStudyToUpdateStatus(account, path);
         if(!studyService.isValidPath(newPath)){
@@ -244,7 +244,7 @@ public class StudySettingsController {
     }
 
     @PostMapping("/study/title")
-    public String updateStudyTitle(@CurrentUser Account account, @PathVariable String path,@RequestParam String newTitle,
+    public String updateStudyTitle(@CurrentAccount Account account, @PathVariable String path,@RequestParam String newTitle,
                                    Model model,RedirectAttributes attributes){
         Study study = studyService.getStudyToUpdateStatus(account, path);
         if(!studyService.isValidTitle(newTitle)){
@@ -259,7 +259,7 @@ public class StudySettingsController {
     }
 
     @PostMapping("/study/remove")
-    public String removeStudy(@CurrentUser Account account,@PathVariable String path,Model model){
+    public String removeStudy(@CurrentAccount Account account,@PathVariable String path,Model model){
         Study study = studyService.getStudyToUpdateStatus(account,path);
         studyService.remove(study);
         return "redirect:/";
