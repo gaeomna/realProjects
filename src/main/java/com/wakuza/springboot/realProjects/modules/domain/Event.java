@@ -28,7 +28,7 @@ public class Event {
     private String description;
 
     @Column(nullable = false)
-    private LocalDateTime createDateTime; // 만든 시간
+    private LocalDateTime createdDateTime; // 만든 시간
 
     @Column(nullable = false)
     private LocalDateTime endEnrollmentDateTime; // 접수 종료 시간
