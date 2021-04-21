@@ -33,14 +33,14 @@ public class EventController {
 
 
     @InitBinder("eventForm")
-    public void initBinder(WebDataBinder webDataBinder){
+    public void initBinder(WebDataBinder webDataBinder) {
         webDataBinder.addValidators(eventValidator);
     }
 
 
     @GetMapping("/new-event")
-    public String newEventForm(@CurrentAccount Account account, @PathVariable String path, Model model){
-        Study study = studyService.getStudyToUpdateStatus(account,path);
+    public String newEventForm(@CurrentAccount Account account, @PathVariable String path, Model model) {
+        Study study = studyService.getStudyToUpdateStatus(account, path);
         model.addAttribute(study);
         model.addAttribute(account);
         model.addAttribute(new EventForm());
@@ -49,29 +49,30 @@ public class EventController {
 
     @PostMapping("/new-event")
     public String newEventSubmit(@CurrentAccount Account account, @PathVariable String path,
-                                 @Valid EventForm eventForm, Errors errors, Model model){
-        Study study = studyService.getStudyToUpdateStatus(account,path);
-        if(errors.hasErrors()){
+                                 @Valid EventForm eventForm, Errors errors, Model model) {
+        Study study = studyService.getStudyToUpdateStatus(account, path);
+        if (errors.hasErrors()) {
             model.addAttribute(account);
             model.addAttribute(study);
             return "event/form";
         }
 
-        Event event = eventService.createEvent(modelMapper.map(eventForm, Event.class),study,account);
+        Event event = eventService.createEvent(modelMapper.map(eventForm, Event.class), study, account);
         return "redirect:/study/" + study.getEncodedPath() + "/events" + event.getId();
     }
 
     @GetMapping("/events/{id}")
     public String getEvent(@CurrentAccount Account account, @PathVariable String path,
-                           @PathVariable Long id,Model model){
+                           @PathVariable Long id, Model model) {
         model.addAttribute(account);
         model.addAttribute(eventRepository.findById(id).orElseThrow());
         model.addAttribute(studyService.getStudy(path));
         return "event/view";
     }
+
     @GetMapping("/events")
     public String viewStudyEvents(@CurrentAccount Account account, @PathVariable String path,
-                                  Model model){
+                                  Model model) {
         Study study = studyService.getStudy(path);
         model.addAttribute(account);
         model.addAttribute(study);
@@ -79,48 +80,58 @@ public class EventController {
         List<Event> events = eventRepository.findByStudyOrderByStartDateTime(study);
         List<Event> newEvents = new ArrayList<>();
         List<Event> oldEvents = new ArrayList<>();
-        events.forEach(e ->{
-            if(e.getEndDateTime().isBefore(LocalDateTime.now())){
+        events.forEach(e -> {
+            if (e.getEndDateTime().isBefore(LocalDateTime.now())) {
                 oldEvents.add(e);
-            }else{
+            } else {
                 newEvents.add(e);
             }
         });
 
-        model.addAttribute("newEvents",newEvents);
-        model.addAttribute("oldEvents",oldEvents);
+        model.addAttribute("newEvents", newEvents);
+        model.addAttribute("oldEvents", oldEvents);
 
         return "study/events";
     }
 
     @GetMapping("/events/{id}/edit")
     public String updateEventForm(@CurrentAccount Account account,
-                                  @PathVariable String path, @PathVariable Long id, Model model){
-        Study study = studyService.getStudyToUpdateStatus(account,path);
+                                  @PathVariable String path, @PathVariable Long id, Model model) {
+        Study study = studyService.getStudyToUpdateStatus(account, path);
         Event event = eventRepository.findById(id).orElseThrow();
         model.addAttribute(study);
         model.addAttribute(account);
         model.addAttribute(event);
-        model.addAttribute(modelMapper.map(event,EventForm.class));
+        model.addAttribute(modelMapper.map(event, EventForm.class));
         return "event/update-form";
     }
+
     @PostMapping("/events/{id}/edit")
     public String updateEventSubmit(@CurrentAccount Account account,
                                     @PathVariable String path, @PathVariable Long id,
-                                    @Valid EventForm eventForm, Errors errors,Model model){
-        Study study = studyService.getStudyToUpdateStatus(account,path);
+                                    @Valid EventForm eventForm, Errors errors, Model model) {
+        Study study = studyService.getStudyToUpdate(account, path);
         Event event = eventRepository.findById(id).orElseThrow();
         eventForm.setEventType(event.getEventType());
-        eventValidator.validateUpdateForm(eventForm,event,errors);
+        eventValidator.validateUpdateForm(eventForm, event, errors);
 
-        if(errors.hasErrors()){
+        if (errors.hasErrors()) {
             model.addAttribute(study);
             model.addAttribute(account);
             model.addAttribute(event);
         }
 
-        eventService.updateEvent(event,eventForm);
+        eventService.updateEvent(event, eventForm);
         return "redirect:/study/" + study.getEncodedPath() + "/events/" + event.getId();
     }
 
+    @DeleteMapping("/events/{id}")
+    public String cancelEvent(@CurrentAccount Account account, @PathVariable String path, @PathVariable long id) {
+        //@PathVariable("path") Study study, @PathVariable("id") Event event 이런식으로 바인딩 받을 수도 있음
+        Study study = studyService.getStudyToUpdateStatus(account, path);
+        eventService.deleteEvent(eventRepository.findById(id).orElseThrow());
+        return "redirect:/study/" + study.getEncodedPath() + "/events";
+
+
+    }
 }

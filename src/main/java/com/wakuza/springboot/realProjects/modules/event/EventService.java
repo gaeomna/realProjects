@@ -31,4 +31,8 @@ public class EventService {
         //TODO 모집 인원을 늘린 선착순 모임의 경우에는,자동으로 추가 인원의 참가신청을 확정 상태로 변경해야 한다.(나중에)
 
     }
+
+    public void deleteEvent(Event event) {
+        eventRepository.delete(event);
+    }
 }
