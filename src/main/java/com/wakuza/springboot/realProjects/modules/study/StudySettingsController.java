@@ -4,23 +4,18 @@ package com.wakuza.springboot.realProjects.modules.study;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wakuza.springboot.realProjects.modules.account.CurrentAccount;
-import com.wakuza.springboot.realProjects.modules.domain.Account;
-import com.wakuza.springboot.realProjects.modules.domain.Study;
-import com.wakuza.springboot.realProjects.modules.domain.Tag;
-import com.wakuza.springboot.realProjects.modules.domain.Zone;
-import com.wakuza.springboot.realProjects.modules.settings.form.Profile;
-import com.wakuza.springboot.realProjects.modules.settings.tag.TagForm;
-import com.wakuza.springboot.realProjects.modules.settings.tag.TagRepository;
-import com.wakuza.springboot.realProjects.modules.settings.tag.TagService;
-import com.wakuza.springboot.realProjects.modules.settings.zone.ZoneForm;
-import com.wakuza.springboot.realProjects.modules.settings.zone.ZoneRepository;
-import com.wakuza.springboot.realProjects.modules.study.validator.StudyFormValidator;
+import com.wakuza.springboot.realProjects.modules.account.Account;
+import com.wakuza.springboot.realProjects.modules.tag.Tag;
+import com.wakuza.springboot.realProjects.modules.zone.Zone;
+import com.wakuza.springboot.realProjects.modules.tag.TagForm;
+import com.wakuza.springboot.realProjects.modules.tag.TagRepository;
+import com.wakuza.springboot.realProjects.modules.tag.TagService;
+import com.wakuza.springboot.realProjects.modules.zone.ZoneForm;
+import com.wakuza.springboot.realProjects.modules.zone.ZoneRepository;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.validator.constraints.Currency;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
@@ -28,13 +23,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
-
-import static com.wakuza.springboot.realProjects.modules.settings.SettingsController.*;
 
 
 @RequiredArgsConstructor

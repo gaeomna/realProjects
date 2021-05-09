@@ -2,7 +2,7 @@ package com.wakuza.springboot.realProjects.modules.main;
 
 
 import com.wakuza.springboot.realProjects.modules.account.CurrentAccount;
-import com.wakuza.springboot.realProjects.modules.domain.Account;
+import com.wakuza.springboot.realProjects.modules.account.Account;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;

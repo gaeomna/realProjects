@@ -1,4 +1,4 @@
-package com.wakuza.springboot.realProjects.modules.settings.tag;
+package com.wakuza.springboot.realProjects.modules.tag;
 
 
 import lombok.Data;

@@ -1,10 +1,8 @@
 package com.wakuza.springboot.realProjects.modules.study;
 
-import com.wakuza.springboot.realProjects.WithAccount;
+import com.wakuza.springboot.realProjects.modules.account.WithAccount;
 import com.wakuza.springboot.realProjects.modules.account.AccountRepository;
-import com.wakuza.springboot.realProjects.modules.account.AccountService;
-import com.wakuza.springboot.realProjects.modules.domain.Account;
-import com.wakuza.springboot.realProjects.modules.domain.Study;
+import com.wakuza.springboot.realProjects.modules.account.Account;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

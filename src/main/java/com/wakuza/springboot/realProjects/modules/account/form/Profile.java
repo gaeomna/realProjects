@@ -1,4 +1,4 @@
-package com.wakuza.springboot.realProjects.modules.settings.form;
+package com.wakuza.springboot.realProjects.modules.account.form;
 
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;

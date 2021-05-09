@@ -1,4 +1,4 @@
-package com.wakuza.springboot.realProjects.modules.domain;
+package com.wakuza.springboot.realProjects.modules.tag;
 
 
 import lombok.*;

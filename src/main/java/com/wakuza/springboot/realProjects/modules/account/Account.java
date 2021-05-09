@@ -1,5 +1,7 @@
-package com.wakuza.springboot.realProjects.modules.domain;
+package com.wakuza.springboot.realProjects.modules.account;
 
+import com.wakuza.springboot.realProjects.modules.tag.Tag;
+import com.wakuza.springboot.realProjects.modules.zone.Zone;
 import lombok.*;
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -83,7 +85,5 @@ public class Account {
         return this.emailCheckTokenGeneratedAt.isBefore(LocalDateTime.now().minusHours(1));
     }
 
-    public boolean isManagerOf(Study study) {
-        return study.getManagers().contains(this);
-    }
+
 }

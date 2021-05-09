@@ -1,18 +1,14 @@
 package com.wakuza.springboot.realProjects.modules.study;
 
 
-import com.wakuza.springboot.realProjects.modules.domain.Account;
-import com.wakuza.springboot.realProjects.modules.domain.Study;
-import com.wakuza.springboot.realProjects.modules.domain.Tag;
-import com.wakuza.springboot.realProjects.modules.domain.Zone;
+import com.wakuza.springboot.realProjects.modules.account.Account;
+import com.wakuza.springboot.realProjects.modules.tag.Tag;
+import com.wakuza.springboot.realProjects.modules.zone.Zone;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 import static com.wakuza.springboot.realProjects.modules.study.form.StudyForm.VALID_PATH_PATTERN;
 
@@ -86,7 +82,7 @@ public class StudyService {
     }
 
     private void checkIfManager(Account account, Study study) {
-        if(!account.isManagerOf(study)){
+        if(!study.isManagedBy(account)){
             throw new AccessDeniedException("해당 기능을 사용할 수 없습니다.");
         }
     }

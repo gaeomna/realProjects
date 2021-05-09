@@ -1,8 +1,8 @@
-package com.wakuza.springboot.realProjects.modules.settings.validator;
+package com.wakuza.springboot.realProjects.modules.account.validator;
 
-import com.wakuza.springboot.realProjects.modules.domain.Account;
+import com.wakuza.springboot.realProjects.modules.account.Account;
 import com.wakuza.springboot.realProjects.modules.account.AccountRepository;
-import com.wakuza.springboot.realProjects.modules.settings.form.NicknameForm;
+import com.wakuza.springboot.realProjects.modules.account.form.NicknameForm;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;

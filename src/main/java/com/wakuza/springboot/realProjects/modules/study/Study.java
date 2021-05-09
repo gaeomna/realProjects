@@ -1,7 +1,10 @@
-package com.wakuza.springboot.realProjects.modules.domain;
+package com.wakuza.springboot.realProjects.modules.study;
 
 
+import com.wakuza.springboot.realProjects.modules.account.Account;
 import com.wakuza.springboot.realProjects.modules.account.UserAccount;
+import com.wakuza.springboot.realProjects.modules.tag.Tag;
+import com.wakuza.springboot.realProjects.modules.zone.Zone;
 import lombok.*;
 
 import javax.persistence.*;
@@ -160,6 +163,10 @@ public class Study {
 
     public String getEncodedPath(){
         return URLEncoder.encode(this.path, StandardCharsets.UTF_8);
+    }
+
+    public boolean isManagedBy(Account account) {
+        return this.getManagers().contains(account);
     }
 }
 

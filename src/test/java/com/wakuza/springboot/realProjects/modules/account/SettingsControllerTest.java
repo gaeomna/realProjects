@@ -1,16 +1,16 @@
-package com.wakuza.springboot.realProjects.modules.settings;
+package com.wakuza.springboot.realProjects.modules.account;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wakuza.springboot.realProjects.WithAccount;
-import com.wakuza.springboot.realProjects.modules.domain.Account;
+import com.wakuza.springboot.realProjects.modules.account.WithAccount;
+import com.wakuza.springboot.realProjects.modules.account.Account;
 import com.wakuza.springboot.realProjects.modules.account.AccountRepository;
 import com.wakuza.springboot.realProjects.modules.account.AccountService;
-import com.wakuza.springboot.realProjects.modules.domain.Tag;
-import com.wakuza.springboot.realProjects.modules.domain.Zone;
-import com.wakuza.springboot.realProjects.modules.settings.tag.TagForm;
-import com.wakuza.springboot.realProjects.modules.settings.tag.TagRepository;
-import com.wakuza.springboot.realProjects.modules.settings.zone.ZoneForm;
-import com.wakuza.springboot.realProjects.modules.settings.zone.ZoneRepository;
+import com.wakuza.springboot.realProjects.modules.tag.Tag;
+import com.wakuza.springboot.realProjects.modules.zone.Zone;
+import com.wakuza.springboot.realProjects.modules.tag.TagForm;
+import com.wakuza.springboot.realProjects.modules.tag.TagRepository;
+import com.wakuza.springboot.realProjects.modules.zone.ZoneForm;
+import com.wakuza.springboot.realProjects.modules.zone.ZoneRepository;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -20,7 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.wakuza.springboot.realProjects.modules.settings.SettingsController.*;
+import static com.wakuza.springboot.realProjects.modules.account.SettingsController.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;

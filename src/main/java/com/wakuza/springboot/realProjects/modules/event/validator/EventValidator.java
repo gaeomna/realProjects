@@ -1,7 +1,7 @@
 package com.wakuza.springboot.realProjects.modules.event.validator;
 
 
-import com.wakuza.springboot.realProjects.modules.domain.Event;
+import com.wakuza.springboot.realProjects.modules.event.Event;
 import com.wakuza.springboot.realProjects.modules.event.form.EventForm;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;

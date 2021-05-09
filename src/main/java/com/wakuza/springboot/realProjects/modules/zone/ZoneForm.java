@@ -1,7 +1,6 @@
-package com.wakuza.springboot.realProjects.modules.settings.zone;
+package com.wakuza.springboot.realProjects.modules.zone;
 
 
-import com.wakuza.springboot.realProjects.modules.domain.Zone;
 import lombok.Data;
 
 @Data

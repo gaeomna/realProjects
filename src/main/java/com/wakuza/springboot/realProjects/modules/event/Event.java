@@ -1,8 +1,9 @@
-package com.wakuza.springboot.realProjects.modules.domain;
+package com.wakuza.springboot.realProjects.modules.event;
 
+import com.wakuza.springboot.realProjects.modules.account.Account;
 import com.wakuza.springboot.realProjects.modules.account.UserAccount;
+import com.wakuza.springboot.realProjects.modules.study.Study;
 import lombok.*;
-import org.apache.tomcat.jni.Local;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;

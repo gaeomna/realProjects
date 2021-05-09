@@ -1,4 +1,4 @@
-package com.wakuza.springboot.realProjects;
+package com.wakuza.springboot.realProjects.modules.account;
 
 
 import org.springframework.security.test.context.support.WithSecurityContext;

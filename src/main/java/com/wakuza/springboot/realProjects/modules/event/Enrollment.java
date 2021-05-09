@@ -1,6 +1,7 @@
-package com.wakuza.springboot.realProjects.modules.domain;
+package com.wakuza.springboot.realProjects.modules.event;
 
 
+import com.wakuza.springboot.realProjects.modules.account.Account;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;

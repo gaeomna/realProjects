@@ -1,6 +1,5 @@
-package com.wakuza.springboot.realProjects.modules.settings.zone;
+package com.wakuza.springboot.realProjects.modules.zone;
 
-import com.wakuza.springboot.realProjects.modules.domain.Zone;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;

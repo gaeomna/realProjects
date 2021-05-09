@@ -1,6 +1,5 @@
 package com.wakuza.springboot.realProjects.modules.account;
 
-import com.wakuza.springboot.realProjects.modules.domain.Account;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

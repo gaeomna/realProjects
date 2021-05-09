@@ -2,8 +2,7 @@ package com.wakuza.springboot.realProjects.modules.study;
 
 
 import com.wakuza.springboot.realProjects.modules.account.CurrentAccount;
-import com.wakuza.springboot.realProjects.modules.domain.Account;
-import com.wakuza.springboot.realProjects.modules.domain.Study;
+import com.wakuza.springboot.realProjects.modules.account.Account;
 import com.wakuza.springboot.realProjects.modules.study.form.StudyForm;
 import com.wakuza.springboot.realProjects.modules.study.validator.StudyFormValidator;
 import lombok.RequiredArgsConstructor;

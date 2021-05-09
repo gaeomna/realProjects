@@ -1,9 +1,7 @@
 package com.wakuza.springboot.realProjects.modules.event;
 
-import com.wakuza.springboot.realProjects.modules.domain.Account;
-import com.wakuza.springboot.realProjects.modules.domain.Enrollment;
-import com.wakuza.springboot.realProjects.modules.domain.Event;
-import com.wakuza.springboot.realProjects.modules.domain.Study;
+import com.wakuza.springboot.realProjects.modules.account.Account;
+import com.wakuza.springboot.realProjects.modules.study.Study;
 import com.wakuza.springboot.realProjects.modules.event.form.EventForm;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;

@@ -1,8 +1,5 @@
-package com.wakuza.springboot.realProjects;
+package com.wakuza.springboot.realProjects.modules.account;
 
-import com.mysql.cj.protocol.Security;
-import com.wakuza.springboot.realProjects.modules.account.AccountService;
-import com.wakuza.springboot.realProjects.modules.account.SignUpForm;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

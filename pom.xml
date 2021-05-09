@@ -19,6 +19,7 @@
 		<project.bulid.sourceEncoding>URF-8</project.bulid.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>14</java.version>
+		<spring-data-releasetrain.version>Neumann-RELEASE</spring-data-releasetrain.version>
 	</properties>
 
 	<dependencies>
@@ -102,6 +103,12 @@
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.tngtech.archunit</groupId>
+			<artifactId>archunit-junit5</artifactId>
+			<version>0.13.1</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
